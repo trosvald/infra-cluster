@@ -55,8 +55,9 @@ My hardware I managed to acquire, sticking to amd64 based machines for now.
 
 | Device                                                | Count | OS Disk Size  | Data Disk Size       | Ram     | Operating System | Purpose           |
 |-------------------------------------------------------|-------|---------------|----------------------|---------|------------------|-------------------|
-| Intel NUC7i3BNH                                       | 1     | 500GB SSD     | -                    | 16GB    | Talos            | control-plane     |
-| Lenovo Thinkcentre M920X                              | 1     | 512GB SSD     | -                    | 32GB    | Talos            | worker            |
+| Lenovo Thinkcentre M920X, i5-8500                     | 1     | 500GB SSD     | -                    | 32GB    | Talos            | control-plane     |
+| Lenovo Thinkcentre M920X, i5-8500                     | 1     | 512GB SSD     | -                    | 32GB    | Talos            | worker            |
+| Synology DS1817+                                      | 1     | -             | 8x800GB SSD (RAID-5) | 16GB    | DSM 7.1          | storage           |
 ---
 
 ## 🤝 Graditude and Thanks
