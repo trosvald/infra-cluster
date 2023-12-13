@@ -1,0 +1,5 @@
+---
+providerRegex: |
+  ^(infra-m0|infra-m1|infra-m2|infra-w0|infra-w1|infra-w2|infra-w3|infra-w4)$
+
+bypassDnsResolution: true

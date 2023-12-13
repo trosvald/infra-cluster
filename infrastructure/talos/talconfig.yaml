@@ -1,0 +1,225 @@
+---
+clusterName: ${clusterName}
+endpoint: "https://${clusterName}.${domainName}:6443"
+
+talosVersion: v1.5.5
+kubernetesVersion: 1.28.4
+
+# Image URL rendered on https://factory.talos.dev
+# customization:
+#     extraKernelArgs:
+#         - net.ifnames=0
+#     systemExtensions:
+#         officialExtensions:
+#             - siderolabs/i915-ucode
+#             - siderolabs/intel-ucode
+# talosImageURL: factory.talos.dev/installer/22b1d04da881ef7c57edb0f24d1f3ba2c78a8e22cbe3fa9af4f42d487b2863f7
+
+cniConfig:
+  name: none
+
+additionalApiServerCertSans:
+  - ${clusterEndpointIP}
+
+additionalMachineCertSans:
+  - ${clusterEndpointIP}
+  - ${clusterName}.${domainName}
+
+nodes:
+  # Intel NUC7i3BNH,16GB DDR4,500GB SSD, 1x1Gbps NIC
+  - hostname: infra-m0.${domainName}
+    ipAddress: 172.16.10.13
+    installDisk: /dev/sda
+    controlPlane: true
+    disableSearchDomain: true
+    nameservers:
+      - 172.16.16.5
+    networkInterfaces:
+      - interface: eth0
+        dhcp: false
+        addresses:
+          - 172.16.10.13/24
+        routes:
+          - network: 0.0.0.0/0
+            gateway: 172.16.10.254
+        mtu: 1500
+  # nodeLabels: &masterLabels
+  #   topology.kubernetes.io/region: ${clusterName}
+  #   topology.kubernetes.io/zone: k8s-master
+    patches:
+      - |-
+        machine:
+          install:
+            image: ghcr.io/tripranata/installer-master:v1.5.5
+
+  ### Worker Node
+  ### Core i5 8500, 32GB RAM, 512GB SSD, 2x10Gbps Mellanox ConnectX-3 Pro EN, 1x1Gbps NIC
+  # M920x
+  - hostname: infra-w0.${domainName}
+    ipAddress: 172.16.10.14
+    installDisk: /dev/sda
+    # machineDisks:
+    #   - device: /dev/disk/by-id/ata-CT500MX500SSD1_2149E5EC1D31
+    #     partitions:
+    #       - mountpoint: /var/mnt/sata
+    controlPlane: false
+    disableSearchDomain: true
+    nameservers:
+      - 172.16.16.5
+    networkInterfaces:
+      - interface: eth0
+        ignore: true
+      - interface: eth1
+        dhcp: false
+        addresses:
+          - 172.16.10.14/24
+        routes:
+          - network: 0.0.0.0/0
+            gateway: 172.16.10.254
+        mtu: 1500
+    # nodeLabels: &workerLabels
+    #   node-role.kubernetes.io/worker: worker
+    #   topology.kubernetes.io/region: ${clusterName}
+    #   topology.kubernetes.io/zone: k8s-worker
+    patches:
+      - |-
+        machine:
+          # kubelet:
+          #   extraMounts:
+          #     - destination: /var/mnt/sata
+          #       type: bind
+          #       source: /var/mnt/sata
+          #       options:
+          #         - rbind
+          #         - rshared
+          #         - rw
+          install:
+            image: ghcr.io/trosvald/installer-worker:v1.5.5
+
+controlPlane:
+  patches:
+    - |-
+      cluster:
+        proxy:
+          disabled: true
+        etcd:
+          advertisedSubnets:
+            - 172.16.10.0/24
+    - |-
+      machine:
+        features:
+          kubePrism:
+            enabled: true
+            port: 7445
+          kubernetesTalosAPIAccess:
+            enabled: true
+            allowedRoles:
+              - os:etcd:backup
+            allowedKubernetesNamespaces:
+              - talos-system
+        install:
+          extraKernelArgs:
+            - net.ifnames=0
+            - talos.logging.kernel=udp://${vectorAggregatorAddr}:6001/
+        files:
+          - op: create
+            path: /etc/cri/conf.d/20-customization.part
+            content: |
+              [plugins]
+                [plugins."io.containerd.grpc.v1.cri"]
+                  enable_unprivileged_ports = true
+                  enable_unprivileged_icmp = true
+          - op: create
+            path: /var/etc/nut/upsmon.conf
+            content: |-
+              MONITOR ${upsmonHost} 1 ${upsmonUser} ${upsmonPass} slave
+              SHUTDOWNCMD "/sbin/poweroff"
+            permissions: 0o600
+        kubelet:
+          extraArgs:
+            feature-gates: CronJobTimeZone=true,GracefulNodeShutdown=true,NewVolumeManagerReconstruction=false
+            rotate-server-certificates: "true"
+        logging:
+          destinations:
+            - endpoint: udp://${vectorAggregatorAddr}:6002/
+              format: json_lines
+        network:
+          extraHostEntries:
+            - ip: ${clusterEndpointIP}
+              aliases:
+                - ${clusterName}.${domainName}
+        sysctls:
+          fs.inotify.max_user_watches: "1048576"
+          fs.inotify.max_user_instances: "8192"
+          kernel.randomize_va_space: 0
+          net.core.netdev_max_backlog: 30000
+          net.core.rmem_max: 67108864
+          net.core.wmem_max: 67108864
+          net.ipv4.tcp_rmem: 4096 87380 33554432
+          net.ipv4.tcp_wmem: 4096 65536 33554432
+          net.ipv4.tcp_tw_reuse: 1
+          net.ipv4.tcp_window_scaling: 1
+        time:
+          disabled: false
+          servers:
+            - time1.google.com
+            - time.cloudflare.com
+    - |-
+      - op: remove
+        path: /cluster/apiServer/admissionControl
+
+worker:
+  patches:
+    - |-
+      machine:
+        features:
+          kubePrism:
+            enabled: true
+            port: 7445
+        files:
+          - content: |
+              [plugins]
+                [plugins."io.containerd.grpc.v1.cri"]
+                  enable_unprivileged_ports = true
+                  enable_unprivileged_icmp = true
+            path: /etc/cri/conf.d/20-customization.part
+            op: create
+          - content: |-
+              MONITOR ${upsmonHost} 1 ${upsmonUser} ${upsmonPass} slave
+              SHUTDOWNCMD "/sbin/poweroff"
+            path: /var/etc/nut/upsmon.conf
+            permissions: 0o600
+            op: create
+        kubelet:
+          extraArgs:
+            feature-gates: CronJobTimeZone=true,GracefulNodeShutdown=true,NewVolumeManagerReconstruction=false
+            rotate-server-certificates: "true"
+        install:
+          extraKernelArgs:
+            - net.ifnames=0
+            - talos.logging.kernel=udp://${vectorAggregatorAddr}:6001/
+        logging:
+          destinations:
+            - endpoint: udp://${vectorAggregatorAddr}:6002/
+              format: json_lines
+        network:
+          extraHostEntries:
+            - ip: ${clusterEndpointIP}
+              aliases:
+                - ${clusterName}.${domainName}
+        sysctls:
+          fs.inotify.max_user_watches: "1048576"
+          fs.inotify.max_user_instances: "8192"
+          kernel.randomize_va_space: 0
+          net.core.netdev_max_backlog: 30000
+          net.core.rmem_max: 67108864
+          net.core.wmem_max: 67108864
+          net.ipv4.tcp_rmem: 4096 87380 33554432
+          net.ipv4.tcp_wmem: 4096 65536 33554432
+          net.ipv4.tcp_tw_reuse: 1
+          net.ipv4.tcp_window_scaling: 1
+        time:
+          disabled: false
+          servers:
+            - time1.google.com
+            - time.cloudflare.com

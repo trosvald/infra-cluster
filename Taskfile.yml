@@ -1,0 +1,39 @@
+---
+version: "3"
+
+vars:
+  PROJECT_DIR:
+    sh: "git rev-parse --show-toplevel"
+  KUBERNETES_DIR: "{{.PROJECT_DIR}}/kubernetes"
+  ANSIBLE_DIR: "{{.PROJECT_DIR}}/infrastructure/ansible"
+  TALOS_DIR: "{{.PROJECT_DIR}}/infrastructure/talos"
+  TERRAFORM_DIR: "{{.PROJECT_DIR}}/infrastructure/terraform"
+
+dotenv: [".config.env"]
+
+# env:
+#   # KUBECONFIG: "$HOME/.kube/kubeconfig"
+
+includes:
+  # kubernetes: .taskfiles/Kubernetes.yaml
+  precommit: .taskfiles/Precommit.yaml
+  talos: .taskfiles/Talos.yaml
+  # format: .taskfiles/Format.yaml
+  lint: .taskfiles/Lint.yaml
+  flux: .taskfiles/Flux.yaml
+  # externalsecret: .taskfiles/ExternalSecrets.yaml
+
+tasks:
+  default:
+    silent: true
+    cmds: ["task -l"]
+  deps:
+    desc: Initialize workstation dependencies with Brew
+    cmds:
+      - brew bundle {{.CLI_ARGS}}
+      # - curl -Lo /tmp/talhelper-{{.TALHELPER_VERSION}}.tar.gz https://github.com/budimanjojo/talhelper/releases/download/{{.TALHELPER_VERSION}}/talhelper_$(uname -s | tr "[:upper:]" "[:lower:]")_$(uname -m).tar.gz && tar -xzf /tmp/talhelper-{{.TALHELPER_VERSION}}.tar.gz -C /tmp && sudo mv /tmp/talhelper /usr/local/bin/talhelper
+    preconditions:
+      - sh: command -v brew
+        msg: |
+          Homebrew is not installed. Using MacOS, Linux or WSL?
+          Head over to https://brew.sh to get up and running.
