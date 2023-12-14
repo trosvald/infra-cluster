@@ -8,7 +8,7 @@ metadata:
 spec:
   interval: 30m
   ref:
-    branch: master
+    branch: main
   url: https://github.com/trosvald/infra-cluster
   ignore: |
     # exclude all
