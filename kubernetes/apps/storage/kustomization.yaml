@@ -10,4 +10,4 @@ resources:
   # - ./zot/ks.yaml
   - ./nfs-subdir/ks.yaml
   - ./snapshot-controller/ks.yaml
-  # - ./synology-csi/ks.yaml
+  - ./synology-csi/ks.yaml

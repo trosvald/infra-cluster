@@ -1,18 +1,36 @@
 ---
+# yaml-language-server: $schema=https://json.schemastore.org/kustomization
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
-  - bjw-s.yaml
-  - cilium.yaml
-  - democratic-csi.yaml
-  - external-secrets.yaml
-  - gitlab.yaml
-  - ingress-nginx.yaml
-  - jetstack.yaml
-  - k8tz.yaml
-  - kubernetes-sigs-external-dns.yaml
-  - kubernetes-sigs-nfd.yaml
-  - postfinance.yaml
-  - prometheus-community.yaml
-  - stakater.yaml
-  - weave-gitops.yaml
+  - ./authentik.yaml
+  - ./backube.yaml
+  - ./bitnami.yaml
+  - ./bjw-s.yaml
+  - ./cilium.yaml
+  - ./cloudnative-pg.yaml
+  - ./democratic-csi.yaml
+  - ./descheduler.yaml
+  - ./external-dns.yaml
+  - ./external-secrets.yaml
+  - ./gitlab.yaml
+  - ./grafana.yaml
+  - ./hajimari.yaml
+  - ./ingress-nginx.yaml
+  - ./intel.yaml
+  - ./jetstack.yaml
+  - ./k8s-gateway.yaml
+  - ./kubernetes-sigs-metrics-server.yaml
+  - ./kubernetes-sigs-nfs-subdir.yaml
+  - ./kyverno.yaml
+  - ./metallb.yaml
+  - ./minecraft-server.yaml
+  - ./nextcloud.yaml
+  - ./node-feature-discovery.yaml
+  - ./piped.yaml
+  - ./piraeus.yaml
+  - ./postfinance.yaml
+  - ./prometheus-community.yaml
+  - ./stakater.yaml
+  - ./synology-csi.yaml
+  - ./weaveworks.yaml

@@ -3,9 +3,10 @@
 apiVersion: source.toolkit.fluxcd.io/v1beta2
 kind: HelmRepository
 metadata:
-  name: piraeus
+  name: weaveworks
   namespace: flux-system
 spec:
   interval: 1h
-  url: https://piraeus.io/helm-charts/
+  type: oci
+  url: oci://ghcr.io/weaveworks/charts
   timeout: 3m
