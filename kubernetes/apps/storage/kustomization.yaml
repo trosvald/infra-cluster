@@ -6,8 +6,8 @@ resources:
   - ./namespace.yaml
   # Flux-Kustomizations
   # - ./kopia/ks.yaml
-  - ./minio/ks.yaml
-  - ./zot/ks.yaml
+  # - ./minio/ks.yaml
+  # - ./zot/ks.yaml
   - ./nfs-subdir/ks.yaml
   - ./snapshot-controller/ks.yaml
   - ./synology-csi/ks.yaml
