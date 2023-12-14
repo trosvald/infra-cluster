@@ -30,7 +30,6 @@ resources:
   - ./metallb.yaml
   - ./minecraft-server.yaml
   - ./nextcloud.yaml
-  - ./node-feature-discovery.yaml
   - ./piped.yaml
   - ./piraeus.yaml
   - ./postfinance.yaml
