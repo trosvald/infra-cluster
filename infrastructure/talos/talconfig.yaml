@@ -16,7 +16,7 @@ kubernetesVersion: 1.28.4
 # talosImageURL: factory.talos.dev/installer/22b1d04da881ef7c57edb0f24d1f3ba2c78a8e22cbe3fa9af4f42d487b2863f7
 
 cniConfig:
-  name: none
+  name: flannel
 
 additionalApiServerCertSans:
   - ${clusterEndpointIP}
@@ -84,15 +84,6 @@ nodes:
     patches:
       - |-
         machine:
-          # kubelet:
-          #   extraMounts:
-          #     - destination: /var/mnt/sata
-          #       type: bind
-          #       source: /var/mnt/sata
-          #       options:
-          #         - rbind
-          #         - rshared
-          #         - rw
           install:
             image: ghcr.io/trosvald/installer-worker:v1.5.5
 
@@ -100,17 +91,12 @@ controlPlane:
   patches:
     - |-
       cluster:
-        proxy:
-          disabled: true
         etcd:
           advertisedSubnets:
             - 172.16.10.0/24
     - |-
       machine:
         features:
-          kubePrism:
-            enabled: true
-            port: 7445
           kubernetesTalosAPIAccess:
             enabled: true
             allowedRoles:
@@ -162,20 +148,14 @@ controlPlane:
         time:
           disabled: false
           servers:
+            - ntp.monosense.io
             - time1.google.com
             - time.cloudflare.com
-    - |-
-      - op: remove
-        path: /cluster/apiServer/admissionControl
 
 worker:
   patches:
     - |-
       machine:
-        features:
-          kubePrism:
-            enabled: true
-            port: 7445
         files:
           - content: |
               [plugins]
@@ -221,5 +201,6 @@ worker:
         time:
           disabled: false
           servers:
+            - ntp.monosense.io
             - time1.google.com
             - time.cloudflare.com
