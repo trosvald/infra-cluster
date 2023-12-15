@@ -24,7 +24,7 @@ spec:
               tag: 1.1.16
             env:
               NODE_ENV: production
-              HOSTNAME: &host amt.monosense.io
+              HOSTNAME: &host meshcentral.monosense.io
               REVERSE_PROXY: *host
               REVERSE_PROXY_TLS_PORT: 443
               ALLOW_NEW_ACCOUNTS: "false"
@@ -44,7 +44,7 @@ spec:
         enabled: true
         className: internal-nginx
         annotations:
-          external-dns.alpha.kubernetes.io/hostname: "amt.monosense.io"
+          external-dns.alpha.kubernetes.io/hostname: "meshcentral.monosense.io"
           cert-manager.io/cluster-issuer: buypass-production
           nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
         hosts:

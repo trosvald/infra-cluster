@@ -66,12 +66,12 @@ spec:
         enabled: true
         className: internal-nginx
         annotations:
-          external-dns.alpha.kubernetes.io/hostname: "zot.monosense.io"
+          external-dns.alpha.kubernetes.io/hostname: "registry.monosense.io"
           cert-manager.io/cluster-issuer: buypass-production
           nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
           nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
         hosts:
-          - host: &host zot.monosense.io
+          - host: &host registry.monosense.io
             paths:
               - path: /
                 service:
