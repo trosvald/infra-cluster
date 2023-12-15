@@ -1,0 +1,21 @@
+---
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: buypass-production
+spec:
+  acme:
+    email: eko.purwanto@monosense.io
+    preferredChain: ""
+    privateKeySecretRef:
+      name: buypass-production
+    server: https://api.buypass.com/acme/directory
+    solvers:
+      - dns01:
+          cloudflare:
+            apiTokenSecretRef:
+              name: cloudflare-api-token
+              key: api-token
+        selector:
+          dnsZones:
+            - monosense.io

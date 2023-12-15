@@ -1,0 +1,32 @@
+---
+apiVersion: cilium.io/v2alpha1
+kind: CiliumBGPPeeringPolicy
+metadata:
+  name: bgp-loadbalancer-ip-main
+  namespace: kube-system
+spec:
+  nodeSelector:
+    matchLabels:
+      kubernetes.io/os: "linux" # match all Linux nodes, change this to match more granularly if more than 1 PeeringPolicy is to be used throughout cluster
+  virtualRouters:
+    - localASN: 64514
+      exportPodCIDR: false
+      serviceSelector: # this replaces address-pools, instead of defining the range of IPs that can be assigned to LoadBalancer services, now services have to match below selectors for their LB IPs to be announced
+        matchExpressions:
+          - {
+            key: thisFakeSelector,
+            operator: NotIn,
+            values: ["will-match-and-announce-all-services"],
+          }
+      neighbors:
+        - peerAddress: "172.16.11.254/32"
+          peerASN: 64513
+
+---
+apiVersion: "cilium.io/v2alpha1"
+kind: CiliumLoadBalancerIPPool
+metadata:
+  name: main-pool
+spec:
+  cidrs:
+    - cidr: 10.11.11.0/24

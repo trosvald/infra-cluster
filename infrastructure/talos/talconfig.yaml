@@ -26,7 +26,7 @@ additionalMachineCertSans:
   - ${clusterName}.${domainName}
 
 nodes:
-  # Intel NUC7i3BNH,16GB DDR4,500GB SSD, 1x1Gbps NIC
+  # Thinkcentre M920x Core i5 8500, 32GB RAM, 500GB SSD, 1x1Gbps NIC
   - hostname: infra-m0.${domainName}
     ipAddress: 172.16.10.13
     installDisk: /dev/sda
@@ -53,15 +53,10 @@ nodes:
             image: ghcr.io/tripranata/installer-master:v1.5.5
 
   ### Worker Node
-  ### Core i5 8500, 32GB RAM, 512GB SSD, 2x10Gbps Mellanox ConnectX-3 Pro EN, 1x1Gbps NIC
-  # M920x
+  ### M920x Core i5 8500, 32GB RAM, 512GB NVME (OS),2x10Gbps Mellanox ConnectX-3 Pro EN, 1x1Gbps NIC
   - hostname: infra-w0.${domainName}
     ipAddress: 172.16.10.14
     installDisk: /dev/sda
-    # machineDisks:
-    #   - device: /dev/disk/by-id/ata-CT500MX500SSD1_2149E5EC1D31
-    #     partitions:
-    #       - mountpoint: /var/mnt/sata
     controlPlane: false
     disableSearchDomain: true
     nameservers:
@@ -95,7 +90,7 @@ controlPlane:
           disabled: true
         etcd:
           advertisedSubnets:
-            - 172.16.10.0/24
+            - 172.16.11.0/24
     - |-
       machine:
         features:
@@ -123,7 +118,7 @@ controlPlane:
           - op: create
             path: /var/etc/nut/upsmon.conf
             content: |-
-              MONITOR ${upsmonHost} 1 ${upsmonUser} ${upsmonPass} slave
+              MONITOR ${upsmonMasterHost} 1 ${upsmonMasterUser} ${upsmonMasterPass} slave
               SHUTDOWNCMD "/sbin/poweroff"
             permissions: 0o600
         kubelet:
@@ -153,9 +148,7 @@ controlPlane:
         time:
           disabled: false
           servers:
-            - ntp.monosense.io
-            - time1.google.com
-            - time.cloudflare.com
+            - 172.16.10.254
     - |-
       - op: remove
         path: /cluster/apiServer/admissionControl
@@ -177,7 +170,7 @@ worker:
             path: /etc/cri/conf.d/20-customization.part
             op: create
           - content: |-
-              MONITOR ${upsmonHost} 1 ${upsmonUser} ${upsmonPass} slave
+              MONITOR ${upsmonWorkerHost} 1 ${upsmonWorkerUser} ${upsmonWorkerPass} slave
               SHUTDOWNCMD "/sbin/poweroff"
             path: /var/etc/nut/upsmon.conf
             permissions: 0o600
@@ -213,6 +206,4 @@ worker:
         time:
           disabled: false
           servers:
-            - ntp.monosense.io
-            - time1.google.com
-            - time.cloudflare.com
+            - 172.16.10.254

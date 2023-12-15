@@ -6,3 +6,5 @@ resources:
   - ./externalsecret.yaml
   - ./letsencrypt-prod.yaml
   - ./letsencrypt-stg.yaml
+  - ./buypass-prod.yaml
+  - ./buypass-stg.yaml

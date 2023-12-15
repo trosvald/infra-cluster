@@ -31,7 +31,7 @@ spec:
         enabled: true
         type: LoadBalancer
         annotations:
-          external-dns.alpha.kubernetes.io/hostname: "ingress-infra-int.monosense.io"
+          external-dns.alpha.kubernetes.io/hostname: "ingress-infra.monosense.io"
         externalTrafficPolicy: Cluster
 
       publishService:
