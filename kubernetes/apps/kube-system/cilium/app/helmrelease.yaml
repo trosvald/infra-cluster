@@ -43,7 +43,7 @@ spec:
           enabled: true
           className: "internal-nginx"
           hosts:
-            - &host hubble-cluster-0.monosense.io
+            - &host hubble-infra.monosense.io
           tls:
             - hosts:
                 - *host
