@@ -25,9 +25,6 @@ spec:
       retries: 3
   uninstall:
     keepHistory: false
-  dependsOn:
-    - name: synology-csi
-      namespace: storage
   values:
     emqxConfig:
       EMQX_ALLOW_ANONYMOUS: "false"
@@ -36,7 +33,7 @@ spec:
     service:
       type: LoadBalancer
       annotations:
-        cert-manager.io/cluster-issuer: buypass-staging
+        cert-manager.io/cluster-issuer: buypass-production
         external-dns.alpha.kubernetes.io/hostname: mqtt.monosense.io
         io.cilium/lb-ipam-ips: 10.11.11.2
     ingress:
