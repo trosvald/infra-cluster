@@ -118,7 +118,7 @@ controlPlane:
           - op: create
             path: /var/etc/nut/upsmon.conf
             content: |-
-              MONITOR ${upsmonMasterHost} 1 ${upsmonMasterUser} ${upsmonMasterPass} slave
+              MONITOR ${upsmonHost} 1 ${upsmonUser} ${upsmonPass} slave
               SHUTDOWNCMD "/sbin/poweroff"
             permissions: 0o600
         kubelet:
@@ -170,7 +170,7 @@ worker:
             path: /etc/cri/conf.d/20-customization.part
             op: create
           - content: |-
-              MONITOR ${upsmonWorkerHost} 1 ${upsmonWorkerUser} ${upsmonWorkerPass} slave
+              MONITOR ${upsmonHost} 1 ${upsmonUser} ${upsmonPass} slave
               SHUTDOWNCMD "/sbin/poweroff"
             path: /var/etc/nut/upsmon.conf
             permissions: 0o600
