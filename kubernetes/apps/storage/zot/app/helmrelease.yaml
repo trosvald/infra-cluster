@@ -67,7 +67,7 @@ spec:
         className: internal-nginx
         annotations:
           external-dns.alpha.kubernetes.io/hostname: "registry.monosense.io"
-          cert-manager.io/cluster-issuer: buypass-production
+          cert-manager.io/cluster-issuer: letsencrypt-production
           nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
           nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
         hosts:
