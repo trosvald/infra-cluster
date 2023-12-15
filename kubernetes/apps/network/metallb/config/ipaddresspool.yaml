@@ -1,8 +1,0 @@
-apiVersion: metallb.io/v1beta1
-kind: IPAddressPool
-metadata:
-  name: infra
-spec:
-  addresses:
-    - 172.16.10.100-172.16.10.150
-  autoAssign: true
