@@ -148,7 +148,9 @@ controlPlane:
         time:
           disabled: false
           servers:
-            - 172.16.10.254
+            - ntp.monosense.io
+            - time.google.com
+            - time.cloudflare.com
     - |-
       - op: remove
         path: /cluster/apiServer/admissionControl
@@ -206,4 +208,6 @@ worker:
         time:
           disabled: false
           servers:
-            - 172.16.10.254
+            - ntp.monosense.io
+            - time.google.com
+            - time.cloudflare.com
