@@ -12,6 +12,7 @@ resources:
   - ./crunchydata.yaml
   - ./democratic-csi.yaml
   - ./descheduler.yaml
+  - ./emqx.yaml
   - ./external-dns.yaml
   - ./external-secrets.yaml
   - ./gitlab.yaml
