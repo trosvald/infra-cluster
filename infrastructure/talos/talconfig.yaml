@@ -90,7 +90,7 @@ controlPlane:
           disabled: true
         etcd:
           advertisedSubnets:
-            - 172.16.11.0/24
+            - 172.16.10.0/24
     - |-
       machine:
         features:
