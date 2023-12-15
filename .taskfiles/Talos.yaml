@@ -46,8 +46,8 @@ tasks:
     desc: Apply Talos config to a node in maintenance mode
     dir: infrastructure/talos
     cmds:
-      - task: generate
-      - talosctl apply-config -i -n {{ .IP }} -f clusterconfig/infra-infra-m0{{ .NODE }}.{{ .DOMAIN }}.yaml
+      # - task: generate
+      - talosctl apply-config -i -n {{ .IP }} -f clusterconfig/infra-{{ .NODE }}.{{ .DOMAIN }}.yaml
 
   upgrade-master:
     internal: true
@@ -81,7 +81,7 @@ tasks:
       - task: generate
       - export TALOSCONFIG=~/devops/home-cluster/infrastructure/talos/clusterconfig/talosconfig
       # - talosctl config merge infrastructure/talos/clusterconfig/talosconfig
-      # - talosctl --talosconfig=infrastructure/talos/clusterconfig/talosconfig kubeconfig -n cluster-0.{{ .DOMAIN }} $KUBECONFIG
+      # - talosctl --talosconfig=infrastructure/talos/clusterconfig/talosconfig kubeconfig -n infra.{{ .DOMAIN }} $KUBECONFIG
 
   deploy-integrations:
     internal: true
@@ -96,26 +96,16 @@ tasks:
     cmds:
       - task: generate
       - task: apply-insecure
-        vars: {IP: "172.16.11.10", NODE: "k8s-m0"}
+        vars: {IP: "172.16.10.13", NODE: "infra-m0"}
       - task: apply-insecure
-        vars: {IP: "172.16.11.11", NODE: "k8s-m1"}
-      - task: apply-insecure
-        vars: {IP: "172.16.11.12", NODE: "k8s-m2"}
-      - task: apply-insecure
-        vars: {IP: "172.16.11.13", NODE: "k8s-w0"}
-      - task: apply-insecure
-        vars: {IP: "172.16.11.14", NODE: "k8s-w1"}
-      - task: apply-insecure
-        vars: {IP: "172.16.11.15", NODE: "k8s-w2"}
-      - task: apply-insecure
-        vars: {IP: "172.16.11.16", NODE: "k8s-w3"}
+        vars: {IP: "172.16.10.14", NODE: "infra-w0"}
       - echo "Wait for install"
       - sleep 300
       - echo "Bootstrapping etcd"
-      - talosctl bootstrap -n cluster-0.{{ .DOMAIN }}
+      - talosctl bootstrap -n infra.{{ .DOMAIN }}
       - sleep 360
-      - talosctl -n cluster-0.{{ .DOMAIN }} kubeconfig -f
-      - task: init
+      - talosctl -n infra.{{ .DOMAIN }} kubeconfig -f
+      # - task: init
       # - kubectl certificate approve $(kubectl get csr --sort-by=.metadata.creationTimestamp | grep Pending | awk '{print $1}')
       - task: deploy-integrations
 
@@ -132,17 +122,9 @@ tasks:
     cmds:
       - task: generate
       - task: apply
-        vars: {NODE: master-0}
+        vars: {NODE: infra-m0}
       - task: apply
-        vars: {NODE: master-1}
-      - task: apply
-        vars: {NODE: master-2}
-      - task: apply
-        vars: {NODE: worker-0}
-      - task: apply
-        vars: {NODE: worker-1}
-      - task: apply
-        vars: {NODE: worker-2}
+        vars: {NODE: infra-w0}
 
   upgrade:all:
     desc: Upgrade all nodes to Talos version {{ .TALOS_VERSION }} (task talos:upgrade:all)
@@ -151,24 +133,14 @@ tasks:
       - task: generate
       # control-plane
       - task: upgrade-master
-        vars: {NODE: k8s-m0}
-      - task: upgrade-master
-        vars: {NODE: k8s-m1}
-      - task: upgrade-master
-        vars: {NODE: k8s-m2}
+        vars: {NODE: infra-m0}
       # workers
       - task: upgrade-worker
-        vars: {NODE: k8s-w0}
-      - task: upgrade-worker
-        vars: {NODE: k8s-w1}
-      - task: upgrade-worker
-        vars: {NODE: k8s-w2}
-      - task: upgrade-worker
-        vars: {NODE: k8s-w3}
+        vars: {NODE: infra-w0}
 
   upgrade:k8s:
     dir: infrastructure/talos
-    desc: Upgrade Kubernetes to {{ .KUBERNETES_VERSION }} (task talos:upgrade:k8s NODE=k8s-m0)
+    desc: Upgrade Kubernetes to {{ .KUBERNETES_VERSION }} (task talos:upgrade:k8s NODE=infra-m0)
     cmds:
       - task: generate
       - talosctl -n {{ .NODE }}.{{ .DOMAIN }} upgrade-k8s --to {{ .KUBERNETES_VERSION }}
