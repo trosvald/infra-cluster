@@ -45,7 +45,7 @@ spec:
         className: internal-nginx
         annotations:
           external-dns.alpha.kubernetes.io/hostname: "amt.monosense.io"
-          cert-manager.io/cluster-issuer: letsencrypt-staging
+          cert-manager.io/cluster-issuer: buypass-production
           nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
         hosts:
           - host: *host
