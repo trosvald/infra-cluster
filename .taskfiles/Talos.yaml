@@ -100,11 +100,11 @@ tasks:
       - task: apply-insecure
         vars: {IP: "172.16.10.14", NODE: "infra-w0"}
       - echo "Wait for install"
-      - sleep 300
+      - sleep 240
       - echo "Bootstrapping etcd"
       - talosctl bootstrap -n infra.{{ .DOMAIN }}
-      - sleep 360
       - talosctl -n infra.{{ .DOMAIN }} kubeconfig -f
+      - sleep 240
       # - task: init
       # - kubectl certificate approve $(kubectl get csr --sort-by=.metadata.creationTimestamp | grep Pending | awk '{print $1}')
       - task: deploy-integrations
