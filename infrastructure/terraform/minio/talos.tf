@@ -3,7 +3,7 @@ module "talos" {
   vault       = "Automation"
   bucket_name = "talos"
   # The OP provider converts the fields with toLower!
-  user_secret_item = "s3_seret_key"
+  user_secret_item = "s3_secret_key"
   versioning       = true
 }
 

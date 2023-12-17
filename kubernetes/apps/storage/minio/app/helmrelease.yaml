@@ -84,6 +84,7 @@ spec:
         enabled: true
         className: internal-nginx
         annotations:
+          nginx.ingress.kubernetes.io/upstream-vhost: minio:9000
           cert-manager.io/cluster-issuer: letsencrypt-production
         hosts:
           - host: &host minio.monosense.io
