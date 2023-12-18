@@ -30,6 +30,7 @@ spec:
     storageClass:
       defaultClass: false
       pathPattern: "${.PVC.namespace}-${.PVC.name}"
+      onDelete: retain
     affinity:
       podAntiAffinity:
         preferredDuringSchedulingIgnoredDuringExecution:
