@@ -4,7 +4,7 @@ version: "3"
 vars:
   DOMAIN: "monosense.io"
   # renovate: datasource=github-releases depName=ishioni/talos-images
-  TALOS_VERSION: "v1.5.5"
+  TALOS_VERSION: "1.6.0"
   # renovate: datasource=github-releases depName=budimanjojo/talhelper
   TALHELPER_VERSION: "1.16.0"
   # renovate: datasource=github-releases depName=siderolabs/kubelet
