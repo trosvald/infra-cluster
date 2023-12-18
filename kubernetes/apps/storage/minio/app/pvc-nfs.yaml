@@ -4,11 +4,11 @@ kind: PersistentVolumeClaim
 metadata:
   annotations:
     kustomize.toolkit.fluxcd.io/prune: disabled
-  name: minio-data
+  name: minio-data-nfs
   namespace: storage
 spec:
-  accessModes: ["ReadWriteOnce"]
-  #storageClassName: nfs-client
+  accessModes: ["ReadWriteMany"]
+  storageClassName: nfs-client
   resources:
     requests:
       storage: 1Ti
