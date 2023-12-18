@@ -5,6 +5,7 @@ provider "registry.terraform.io/1password/onepassword" {
   version     = "1.4.0"
   constraints = "1.4.0"
   hashes = [
+    "h1:1x3eUZ798TMJ8GQumJWL7PWkjwikJyDxYPPlZ7du7qo=",
     "h1:bOsl+sPpHs4hpwLTsH1FBpWnPVoC6FGPWhfWT/bwzNk=",
     "zh:022eca04f1d3e8939cc22db98c82c753fcfc9dca397504398e0dffebce4a2f3d",
     "zh:1bad7e8b5b764258b9bb7866b5d2f23873bcccbb9ee09792e7c49fabb8936e05",
@@ -27,6 +28,7 @@ provider "registry.terraform.io/aminueza/minio" {
   version     = "2.0.1"
   constraints = "2.0.1"
   hashes = [
+    "h1:34tfS48+4g+KaDMpAi70r5lcp10Le1OXSISIZvpVjDs=",
     "h1:aqhcTFdy11kuwg6hjNMdhdcCmdhj6U/lnplArGiKMV0=",
     "zh:0d3d3b56c4ea77118fab48bd0fe2ea4e470218b1c0c5af036b7ada18dd2b54c7",
     "zh:1a8f025abc57d1b3e011cdb98d83276cf09c05766c00913e441cde428e8f600c",
