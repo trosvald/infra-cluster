@@ -8,6 +8,7 @@ metadata:
 spec:
   suspend: false
   interval: 12h
+  approvePlan: auto
   path: ./infrastructure/terraform/minio
   sourceRef:
     kind: GitRepository
