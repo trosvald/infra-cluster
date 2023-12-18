@@ -21,7 +21,7 @@ includes:
   # format: .taskfiles/Format.yaml
   lint: .taskfiles/Lint.yaml
   flux: .taskfiles/Flux.yaml
-  # externalsecret: .taskfiles/ExternalSecrets.yaml
+  externalsecret: .taskfiles/ExternalSecrets.yaml
 
 tasks:
   default:
