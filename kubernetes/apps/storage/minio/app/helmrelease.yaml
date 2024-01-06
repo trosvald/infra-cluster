@@ -31,7 +31,7 @@ spec:
         reloader.stakater.com/auto: "true"
     image:
       repository: quay.io/minio/minio
-      tag: RELEASE.2023-12-23T07-19-11Z
+      tag: RELEASE.2024-01-05T22-17-24Z
     env:
       MINIO_UPDATE: "off"
       MINIO_PROMETHEUS_AUTH_TYPE: public
